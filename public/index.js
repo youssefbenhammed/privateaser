@@ -149,3 +149,19 @@ const actors = [{
 console.log(bars);
 console.log(events);
 console.log(actors);
+
+//Set the booking price 
+
+//Attention : Modifie les variables car constantes
+function setBookingPrice(events,bars) {
+  events.forEach(event=>{
+    bars.forEach(bar => {
+      if (event.barId==bar.id) {
+        event.price = event.time*bar.pricePerHour + event.persons*bar.pricePerPerson;
+      }
+    });
+  });
+}
+
+setBookingPrice(events,bars);
+console.log(events);
