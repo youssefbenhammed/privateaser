@@ -154,10 +154,22 @@ console.log(actors);
 
 //Attention : Modifie les variables car constantes
 function setBookingPrice(events,bars) {
+  var reduction=0; // Réduction a appliqué en pourcentage : entre 0 et 1 
   events.forEach(event=>{
     bars.forEach(bar => {
       if (event.barId==bar.id) {
-        event.price = event.time*bar.pricePerHour + event.persons*bar.pricePerPerson;
+
+        if( 10<=event.persons && event.persons<20) {
+          reduction=0.10;
+        }
+        if(20<=event.persons && event.persons<60) {
+          reduction=0.30;
+        }
+        if(60<=event.persons) {
+          reduction=0.50;
+        }
+        event.price = event.time*bar.pricePerHour + event.persons*bar.pricePerPerson; // Calcul du prix sans réduction
+        event.price = event.price*(1-reduction); // Calcul de prix après réducion 
       }
     });
   });
