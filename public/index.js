@@ -175,5 +175,32 @@ function setBookingPrice(events,bars) {
   });
 }
 
+function setCommission(events) {
+ events.forEach(event=>{
+   var commission = (event.price*0.3);
+   var insurance = commission/2;
+   var treasury = -1;
+   if(insurance>event.persons){ // Verification que l'opération peut se faire .
+      treasury=event.persons;
+   }
+   var privateaser = commission-insurance-treasury;
+
+   if(treasury!=-1){ // Si le calcul précédent a pu se faire on modifie dans la liste sinon on log une erreur.
+     event.commission.insurance=insurance;
+     event.commission.treasury=treasury;
+     event.commission.privateaser=privateaser;
+   }
+   else{
+     console.log("Erreur calcul commission sur la reservation numero " + event.eventId);
+   }
+
+ });
+}
+
+console.log("Setting the Booking price");
 setBookingPrice(events,bars);
 console.log(events);
+console.log("Setting the commisions prices ")
+setCommission(events);
+console.log(events);
+
