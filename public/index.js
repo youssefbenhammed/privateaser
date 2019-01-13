@@ -155,6 +155,7 @@ console.log(actors);
 //Attention : Modifie les variables car constantes
 function setBookingPrice(events,bars) {
   var reduction=0; // Réduction a appliqué en pourcentage : entre 0 et 1 
+  var optionPrice=0; // Prix des options à ajouter après application de la réudction
   events.forEach(event=>{
     bars.forEach(bar => {
       if (event.barId==bar.id) {
@@ -168,8 +169,12 @@ function setBookingPrice(events,bars) {
         if(60<=event.persons) {
           reduction=0.50;
         }
+        if(event.options.deductibleReduction==true){
+          optionPrice=optionPrice+event.persons;
+        }
         event.price = event.time*bar.pricePerHour + event.persons*bar.pricePerPerson; // Calcul du prix sans réduction
         event.price = event.price*(1-reduction); // Calcul de prix après réducion 
+        event.price = event.price + optionPrice;
       }
     });
   });
@@ -201,10 +206,28 @@ function setCommission(events) {
  });
 }
 
+function payment(actors,events){
+  actors.forEach(actor=>{
+      events.forEach(event=>{
+        if(actor.eventId==event.id){
+          actor.payment[0].amount=event.price;
+          actor.payment[1].amount=event.price-event.commission.insurance-event.commission.treasury-event.commission.privateaser;
+          actor.payment[2].amount=event.commission.insurance;
+          actor.payment[3].amount=event.commission.treasury;
+          actor.payment[4].amount=event.commission.privateaser;
+        }
+      });
+  });
+}
+
+
 console.log("Setting the Booking price");
 setBookingPrice(events,bars);
 console.log(events);
-console.log("Setting the commisions prices ")
+console.log("Setting the commisions prices ");
 setCommission(events);
 console.log(events);
+console.log("Payment for all the actors");
+payment(actors,events);
+console.log(actors);
 
