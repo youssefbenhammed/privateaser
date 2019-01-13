@@ -184,6 +184,10 @@ function setCommission(events) {
       treasury=event.persons;
    }
    var privateaser = commission-insurance-treasury;
+   if(event.options.deductibleReduction==true){
+     privateaser=privateaser+event.persons;
+   }
+   
 
    if(treasury!=-1){ // Si le calcul précédent a pu se faire on modifie dans la liste sinon on log une erreur.
      event.commission.insurance=insurance;
